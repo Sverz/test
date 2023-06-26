@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+    test-api:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        expose:
+            - 3000
+        ports:
+            - 3000:3000
+        depends_on:
+            - test-postgres
+        links:
+            - test-postgres
+        volumes:
+            - ./:/home/node/app
+        command: npm run start
+
+    test-postgres:
+        image: postgres:11
+        restart: always
+
+        ports:
+            - 3304:5432
+
+        environment:
+            POSTGRES_PASSWORD: ${DATABASE_PASS}
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_DB: ${DATABASE_DB}
